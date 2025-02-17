@@ -1,10 +1,10 @@
 package com.example.MultiTenant.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+
 import lombok.Getter;
+
+import java.util.List;
 
 @Getter
 @Entity(name = "tenants")
@@ -13,4 +13,7 @@ public class Tenant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String tenantName;
+
+    @OneToMany(mappedBy = "tenant", cascade = CascadeType.ALL)
+    private List<Usuario> usuarios;
 }

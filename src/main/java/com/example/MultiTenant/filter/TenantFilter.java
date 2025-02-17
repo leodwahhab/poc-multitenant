@@ -1,7 +1,6 @@
 package com.example.MultiTenant.filter;
 
-import com.example.MultiTenant.config.DataSourceConfig;
-import com.example.MultiTenant.service.TenantService;
+import com.example.MultiTenant.service.JwtUtil;
 import com.example.MultiTenant.tenant.TenantContext;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -19,20 +18,20 @@ import java.io.IOException;
 public class TenantFilter extends OncePerRequestFilter {
     Logger logger = LoggerFactory.getLogger(TenantFilter.class);
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
-        String tenantName = httpServletRequest.getHeader("tenantName");
+        String token = httpServletRequest.getHeader("Authorization");
 
-        logger.info("Header recebido: tenantName = {}", tenantName);
-
-        if (tenantName != null) {
+        if(token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
+            String tenantName = jwtUtil.extractTenant(token);
             TenantContext.setCurrentTenant(tenantName);
-            logger.info("TenantContext configurado com: {}", tenantName);
-        } else {
-            logger.warn("Nenhum tenant encontrado no header. Usando contexto padrão.");
         }
 
-         try {
+        try {
             filterChain.doFilter(httpServletRequest, httpServletResponse);
         } finally {
             TenantContext.clear();
