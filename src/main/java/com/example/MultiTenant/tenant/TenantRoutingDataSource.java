@@ -1,13 +1,23 @@
 package com.example.MultiTenant.tenant;
 
-import org.springframework.core.annotation.Order;
+import com.example.MultiTenant.config.DataSourceConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
-import org.springframework.stereotype.Component;
 
-@Order(2)
 public class TenantRoutingDataSource extends AbstractRoutingDataSource {
+    Logger logger = LoggerFactory.getLogger(TenantRoutingDataSource.class);
+
     @Override
     protected Object determineCurrentLookupKey() {
-        return TenantContext.getCurrentTenant();
+        String currentTenant = TenantContext.getCurrentTenant();
+
+        if (currentTenant == null) {
+            logger.warn("Nenhum tenant encontrado no contexto. Usando DataSource padrão.");
+        } else {
+            logger.info("Usando tenant: {}", currentTenant);
+        }
+
+        return currentTenant;
     }
 }

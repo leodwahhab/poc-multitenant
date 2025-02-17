@@ -10,5 +10,9 @@ public class TenantContext {
     public static String getCurrentTenant() {
         return currentTenant.get();
     }
+
+    public static void clear() {
+        currentTenant.set("");
+    }
 }
 
