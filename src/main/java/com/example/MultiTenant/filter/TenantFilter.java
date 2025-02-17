@@ -1,6 +1,7 @@
 package com.example.MultiTenant.filter;
 
 import com.example.MultiTenant.config.DataSourceConfig;
+import com.example.MultiTenant.service.TenantService;
 import com.example.MultiTenant.tenant.TenantContext;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -8,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
